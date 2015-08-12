@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "coffee-script": "^1.9.0",
+    "debug": "^2.2.0",
+    "lodash": "^3.10.1",
     "meshblu": "^1.22.0",
-    "debug": "^2.1.0"
+    "meshblu-device-discoverer": "^2.0.0",
+    "meshblu-http": "^3.4.1"
   },
   "bundledDependencies": [
     "request",

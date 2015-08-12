@@ -4,7 +4,7 @@ meshblu  = require 'meshblu'
 
 class Connector extends EventEmitter
   constructor: (@config={}) ->
-    process.on 'uncaughtException', @emitError
+    # process.on 'uncaughtException', @emitError
 
   createConnection: =>
     @conx = meshblu.createConnection
@@ -36,7 +36,7 @@ class Connector extends EventEmitter
 
   onReady: =>
     @conx.whoami uuid: @config.uuid, (device) =>
-      @plugin.setOptions device.options
+      @plugin.onConfig device
       @conx.update
         uuid:          @config.uuid,
         token:         @config.token,
@@ -52,6 +52,9 @@ class Connector extends EventEmitter
       @conx.data data
 
     @plugin.on 'error', @emitError
+
+    @plugin.on 'update', (properties={}) =>
+      @conx.update properties
 
     @plugin.on 'message', (message) =>
       @emit 'message.send', message
