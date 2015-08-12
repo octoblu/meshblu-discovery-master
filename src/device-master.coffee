@@ -3,15 +3,23 @@ _             = require 'lodash'
 debug         = require('debug')('meshblu-discovery-master:device-master')
 IDS_BY_TYPE =
   'device:chromecast': 'chromecastName'
-  'device:lifx-light'      : 'lifxId'
+  'device:lifx-light': 'lifxId'
   'device:hue-light' : 'hueLightId'
   'device:hue'       : 'hueBridgeId'
 
 DEFAULTS_BY_TYPE =
-  'device:chromecast': (properties={}, id) => properties.options.ChromecastName = id
-  'device:lifx'      : (properties={}, id) => properties.options.lightId = id
-  'device:hue-light' : (properties={}, id) => properties.options.lightNumber = id
-  'device:hue'       : (properties={}, id) => properties.options.ipAddress = id
+  'device:chromecast': (properties={}, id) =>
+    properties.options.ChromecastName = id
+    properties
+  'device:lifx-light': (properties={}, id) =>
+    properties.options.lightId = id
+    properties
+  'device:hue-light' : (properties={}, id) =>
+    properties.options.lightNumber = id
+    properties
+  'device:hue'       : (properties={}, id) =>
+    properties.options.ipAddress = id
+    properties
 
 class DeviceMaster
   constructor: (@meshbluJSON={}, @config={}) ->
@@ -40,7 +48,7 @@ class DeviceMaster
 
   createDevice: (type, id, connector, callback=->) =>
     properties = @getDefaults type, id, connector
-    DEFAULTS_BY_TYPE[type]?(properties, id)
+    properties = DEFAULTS_BY_TYPE[type]?(properties, id)
     debug 'creating device'
     @meshbluHttp.register properties, callback
 
@@ -69,6 +77,7 @@ class DeviceMaster
     simplifiedDevice = _.pick device, propertiesToPick
     query = $push: devices: simplifiedDevice
     # Add to gateblu
+    debug 'adding device to gateblu', @config.gatebluUuid, query
     @meshbluHttp.updateDangerously @config.gatebluUuid, query, callback
 
 module.exports = DeviceMaster
