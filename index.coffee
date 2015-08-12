@@ -16,7 +16,7 @@ OPTIONS_SCHEMA =
     searchInterval:
       type: 'number',
       required: true
-      default: 60 * 1000
+      default: 3 * 60 * 1000
     gatebluUuid:
       type: 'string'
       required: true
@@ -39,6 +39,7 @@ class Plugin extends EventEmitter
 
   emitError: (error) =>
     debug 'emitting error', error
+    return console.error error
     @emit 'message',
       devices: '*'
       topic: 'error'
@@ -81,7 +82,7 @@ class Plugin extends EventEmitter
 
   setOptions: (options={}) =>
     defaults =
-      searchInterval: 60 * 1000
+      searchInterval: 3 * 60 * 1000
     @options = _.defaults {}, options, defaults
     return console.error 'no user uuid' unless options.userUuid?
     return console.error 'no gateblu uuid' unless options.gatebluUuid?
