@@ -8,17 +8,19 @@ IDS_BY_TYPE =
   'device:hue'       : 'hueBridgeId'
 
 DEFAULTS_BY_TYPE =
-  'device:chromecast': (properties={}, id) =>
-    properties.options.ChromecastName = id
+  'device:chromecast': (properties={}, device) =>
+    properties.options.ChromecastName = device.id
     properties
-  'device:lifx-light': (properties={}, id) =>
-    properties.options.lightId = id
+  'device:lifx-light': (properties={}, device) =>
+    properties.options = device.device
+    properties.options.lightId = device.id
     properties
-  'device:hue-light' : (properties={}, id) =>
-    properties.options.lightNumber = id
+  'device:hue-light' : (properties={}, device) =>
+    properties.options.lightNumber = device.id
+    properties.options.ipAddress = device.device.ipAddress
     properties
-  'device:hue'       : (properties={}, id) =>
-    properties.options.ipAddress = id
+  'device:hue'       : (properties={}, device) =>
+    properties.options.ipAddress = device.id
     properties
 
 class DeviceMaster
@@ -46,19 +48,22 @@ class DeviceMaster
       return callback error, false if error?
       callback null, !!_.size devices
 
-  createDevice: (type, id, connector, callback=->) =>
-    properties = @getDefaults type, id, connector
-    properties = DEFAULTS_BY_TYPE[type]?(properties, id)
+  createDevice: (device={}, callback=->) =>
+    {type, id, connector} = device
+    properties = @getDefaults device
+    properties = DEFAULTS_BY_TYPE[type]?(properties, device)
     debug 'creating device'
     @meshbluHttp.register properties, callback
 
-  getDefaults: (type, id, connector) =>
+  getDefaults: (device={}) =>
+    {type, id, connector} = device
     properties = {}
     properties.name = id
     properties.type = type
     properties.options = {}
     properties.connector = connector
     properties.category = 'device'
+    properties.discoveredDevice = device.device
     properties[IDS_BY_TYPE[type]] = id
     properties.discoverWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
     properties.receiveWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
