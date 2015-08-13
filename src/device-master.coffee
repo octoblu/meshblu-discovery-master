@@ -58,6 +58,7 @@ class DeviceMaster
     properties.type = type
     properties.options = {}
     properties.connector = connector
+    properties.category = 'device'
     properties[IDS_BY_TYPE[type]] = id
     properties.discoverWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
     properties.receiveWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
