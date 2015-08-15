@@ -65,10 +65,10 @@ class DeviceMaster
     properties.category = 'device'
     properties.discoveredDevice = device.device
     properties[IDS_BY_TYPE[type]] = id
-    properties.discoverWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
-    properties.receiveWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
-    properties.sendWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
-    properties.configureWhitelist = [@config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
+    properties.discoverWhitelist = ['*', @config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
+    properties.receiveWhitelist = ['*', @config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
+    properties.sendWhitelist = ['*', @config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
+    properties.configureWhitelist = ['*', @config.gatebluUuid, @config.userUuid, @meshbluJSON.uuid]
     properties.owner = @config.userUuid
     properties.gateblu = @config.gatebluUuid
     properties
