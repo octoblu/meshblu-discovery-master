@@ -50,16 +50,12 @@ class Plugin extends EventEmitter
     # Do Something
     {type, id} = device
     debug 'device', device
-    @deviceMaster.exists type, id, (error, exists)=>
-      debug 'exists ', type: type, error: error, exists: exists
+    @deviceMaster.findOrCreateDevice device, (error, createdDevice) =>
+      debug 'created device', createdDevice
       return debug 'error', error if error?
-      return debug 'device already exists' if exists
-      @deviceMaster.createDevice device, (error, createdDevice) =>
-        debug 'created device', createdDevice
+      @deviceMaster.addDevice createdDevice, (error) =>
         return debug 'error', error if error?
-        @deviceMaster.addDevice createdDevice, (error) =>
-          return debug 'error', error if error?
-          debug 'added device to gateblu', type: type
+        debug 'added device to gateblu', type: type
 
   onMessage: (message) =>
     payload = message.payload

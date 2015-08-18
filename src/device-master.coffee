@@ -36,7 +36,7 @@ class DeviceMaster
       devices = result.devices || []
       callback null, devices
 
-  exists: (type, id, callback=->) =>
+  findDevice: (type, id, callback=->) =>
     debug 'checking if type exists', type: type, id: id
     query = {}
     typeId = IDS_BY_TYPE[type]
@@ -46,7 +46,14 @@ class DeviceMaster
     @getDevices query, (error, devices) =>
       debug 'got devices', error
       return callback error, false if error?
-      callback null, !!_.size devices
+      callback null, _.first devices
+
+  findOrCreateDevice: (device={}, callback=->) =>
+    @findDevice device.type, device.id, (error, foundDevice) =>
+      return callback error if error?
+      return callback null, foundDevice if foundDevice?
+
+      @createDevice device, callback
 
   createDevice: (device={}, callback=->) =>
     {type, id, connector} = device
@@ -54,6 +61,10 @@ class DeviceMaster
     properties = DEFAULTS_BY_TYPE[type]?(properties, device)
     debug 'creating device'
     @meshbluHttp.register properties, callback
+
+  destroyDevice: (device={}, callback=->) =>
+    debug 'destroying device', device?.uuid
+    @meshbluHttp.unregister device, callback
 
   getDefaults: (device={}) =>
     {type, id, connector} = device
@@ -77,13 +88,23 @@ class DeviceMaster
     debug 'updating ', query
     @meshbluHttp.updateDangerously @meshbluJSON.uuid, query, callback
 
+  findGatebluDevice: (uuid, callback=->) =>
+    @meshbluHttp.device @config.gatebluUuid, (error, device) =>
+      return callback error if error?
+
+      callback null, _.findWhere device.devices, uuid: uuid
+
   addDevice: (device={}, callback=->) =>
-    propertiesToPick = ['uuid', 'token', 'name', 'type', 'connector']
-    propertiesToPick.push IDS_BY_TYPE[device.type]
-    simplifiedDevice = _.pick device, propertiesToPick
-    query = $push: devices: simplifiedDevice
-    # Add to gateblu
-    debug 'adding device to gateblu', @config.gatebluUuid, query
-    @meshbluHttp.updateDangerously @config.gatebluUuid, query, callback
+    @findGatebluDevice device.uuid, (error, foundDevice) =>
+      return callback error if error?
+      return callback null if foundDevice?
+
+      propertiesToPick = ['uuid', 'token', 'name', 'type', 'connector']
+      propertiesToPick.push IDS_BY_TYPE[device.type]
+      simplifiedDevice = _.pick device, propertiesToPick
+      query = $addToSet: devices: simplifiedDevice
+      # Add to gateblu
+      debug 'adding device to gateblu', @config.gatebluUuid, query
+      @meshbluHttp.updateDangerously @config.gatebluUuid, query, callback
 
 module.exports = DeviceMaster
