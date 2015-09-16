@@ -1,3 +1,4 @@
 meshblu.json
-coverage
 .git
+node_modules
+deploy

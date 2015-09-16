@@ -71,7 +71,7 @@ class Plugin extends EventEmitter
     @discoverer.on 'device', @addDevice
     @discoverer.on 'update', @updateDevice
 
-  onConfig: (device) =>
+  onConfig: (device={}) =>
     debug 'on config'
     @config = device
     @setOptions device.options
@@ -82,7 +82,7 @@ class Plugin extends EventEmitter
     @options = _.defaults {}, options, defaults
     return console.error 'no user uuid' unless options.userUuid?
     return console.error 'no gateblu uuid' unless options.gatebluUuid?
-    return console.log "options are the same", @options, options if @isStarted && _.isEqual @options, options
+    return debug "options are the same", @options, options if @isStarted && _.isEqual @options, options
     debug 'set options', @options
     @startDiscovery()
 
