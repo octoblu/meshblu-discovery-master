@@ -1,19 +1,8 @@
 language: node_js
-sudo: true
 node_js:
 - '0.10'
-compiler: clang
 before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq libcv-dev
-  - sudo apt-get install -qq libopencv-dev
-  - sudo apt-get install -qq libhighgui-dev
-  - sudo apt-get install -qq libavahi-compat-libdnssd-dev
-  - npm install node-gyp -g
   - npm install npm -g
-install:
-  - npm install --build-from-source
-  - npm test
 deploy:
   - provider: npm
     skip_cleanup: true
