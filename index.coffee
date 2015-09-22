@@ -1,7 +1,9 @@
 'use strict';
 {EventEmitter}  = require 'events'
 _               = require 'lodash'
-meshbluJSON     = require('./meshblu.json')
+MeshbluConfig   = require 'meshblu-config'
+meshbluConfig   = new MeshbluConfig {}
+meshbluJSON     = meshbluConfig.toJSON()
 DiscoveryMaster = require './src/discovery-master.coffee'
 DeviceMaster    = require './src/device-master.coffee'
 debug           = require('debug')('meshblu-discovery-master:index')

@@ -1,12 +1,12 @@
 ## meshblu-discovery-master
 
+[![Build Status](https://travis-ci.org/octoblu/meshblu-discovery-master.svg?branch=master)](https://travis-ci.org/octoblu/meshblu-discovery-master)
+[![Code Climate](https://codeclimate.com/github/octoblu/meshblu-discovery-master/badges/gpa.svg)](https://codeclimate.com/github/octoblu/meshblu-discovery-master)
+[![Test Coverage](https://codeclimate.com/github/octoblu/meshblu-discovery-master/badges/coverage.svg)](https://codeclimate.com/github/octoblu/meshblu-discovery-master)
+[![npm version](https://badge.fury.io/js/meshblu-discovery-master.svg)](http://badge.fury.io/js/meshblu-discovery-master)
+[![Gitter](https://badges.gitter.im/octoblu/help.svg)](https://gitter.im/octoblu/help)
+
 A Meshblu connector for use in Octoblu or with other services.
-
-Auto-create and maintain devices discovered by meshblu-device-discoverer
-
-#### Permissions
-
-Gateblu must have the Discovery Master device in the configureWhitelist and discoverWhitelist.
 
 ### Setup Instructions
 
